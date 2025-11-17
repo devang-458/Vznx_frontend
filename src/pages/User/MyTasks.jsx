@@ -1,0 +1,303 @@
+import React, { useContext, useEffect, useState } from 'react';
+import DashboardLayout from '../../components/layouts/DashboardLayout';
+import { useUserAuth } from '../../hooks/useUserAuth';
+import { UserContext } from '../../context/userContext';
+import axiosInstance from '../../utils/axiosinstance';
+import { API_PATHS } from '../../utils/apiPaths';
+import { useNavigate } from 'react-router-dom';
+<<<<<<< HEAD
+import { IoFilter } from 'react-icons/io5';
+=======
+import { IoFilter, IoEye } from 'react-icons/io5';
+>>>>>>> 0c51e77eaa8e2a04f0ee88da6f3983da03d1990f
+import { STATUS_DATA } from '../../utils/data';
+import {
+  IoStatsChart,
+  IoListCircle,
+  IoHourglass,
+  IoCheckmarkCircle
+} from 'react-icons/io5';
+import { addThousandsSeparator } from '../../utils/helper';
+import TaskCard from '../../components/Cards/TaskCard';
+import InfoCard from "../../components/Cards/InfoCard";
+<<<<<<< HEAD
+import Button from '../../components/layouts/Button';
+import useFetchData from '../../hooks/useFetchData';
+=======
+>>>>>>> 0c51e77eaa8e2a04f0ee88da6f3983da03d1990f
+
+const MyTasks = () => {
+  useUserAuth();
+  const navigate = useNavigate();
+  const { user } = useContext(UserContext);
+
+<<<<<<< HEAD
+  const [statusFilter, setStatusFilter] = useState('');
+  const tasksUrl = statusFilter
+    ? `${API_PATHS.TASKS.GET_ALL_TASKS}?status=${statusFilter}`
+    : API_PATHS.TASKS.GET_ALL_TASKS;
+
+  const { data: tasksResponse, loading, error, fetchData: refetchTasks } = useFetchData(
+    user ? tasksUrl : null,
+    { skip: !user, dependencies: [statusFilter] }
+  );
+
+  const [tasks, setTasks] = useState([]);
+  const [filteredTasks, setFilteredTasks] = useState([]);
+  // const [loading, setLoading] = useState(false); // Removed
+=======
+  const [tasks, setTasks] = useState([]);
+  const [filteredTasks, setFilteredTasks] = useState([]);
+  const [statusFilter, setStatusFilter] = useState('');
+  const [loading, setLoading] = useState(false);
+>>>>>>> 0c51e77eaa8e2a04f0ee88da6f3983da03d1990f
+  const [statusSummary, setStatusSummary] = useState({
+    all: 0,
+    pendingTasks: 0,
+    inProgressTasks: 0,
+    completedTasks: 0
+  });
+
+<<<<<<< HEAD
+  const [page, setPage] = useState(1);
+  const pageSize = 6;
+
+  const paginatedTasks = filteredTasks.slice((page - 1) * pageSize, page * pageSize);
+  const totalPages = Math.ceil(filteredTasks.length / pageSize);
+
+  const PaginationButtons = () => (
+    <div className="flex gap-2 items-center ">
+      <Button
+        variant="secondary"
+        size="sm"
+        disabled={page === 1}
+        onClick={() => setPage(p => Math.max(p - 1, 1))}
+      >
+        Previous
+      </Button>
+      <span className="text-sm text-gray-600">
+        Page {page} of {totalPages || 1}
+      </span>
+      <Button
+        variant="secondary"
+        size="sm"
+        disabled={page === totalPages || totalPages === 0}
+        onClick={() => setPage(p => Math.min(p + 1, totalPages))}
+      >
+        Next
+      </Button>
+    </div>
+  );
+
+  // const fetchTasks = async (status = '') => { // Removed
+  //   setLoading(true);
+  //   try {
+  //     const url = status
+  //       ? `${API_PATHS.TASKS.GET_ALL_TASKS}?status=${status}`
+  //       : API_PATHS.TASKS.GET_ALL_TASKS;
+
+  //     const response = await axiosInstance.get(url);
+
+  //     setTasks(response.data.tasks || []);
+  //     setFilteredTasks(response.data.tasks || []);
+  //     setStatusSummary(response.data.statusSummary || statusSummary);
+  //     setPage(1); // reset to first page
+  //   } catch (error) {
+  //     console.error('Error fetching tasks:', error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+  useEffect(() => {
+    if (tasksResponse) {
+      setTasks(tasksResponse.tasks || []);
+      setFilteredTasks(tasksResponse.tasks || []);
+      setStatusSummary(tasksResponse.statusSummary || statusSummary);
+      setPage(1); // reset to first page
+    }
+  }, [tasksResponse]);
+
+  const handleFilterChange = (status) => {
+    setStatusFilter(status);
+    // fetchTasks(status); // Removed, now handled by useFetchData dependency
+=======
+  const fetchTasks = async (status = '') => {
+    setLoading(true);
+    try {
+      const url = status
+        ? `${API_PATHS.TASKS.GET_ALL_TASKS}?status=${status}`
+        : API_PATHS.TASKS.GET_ALL_TASKS;
+
+      const response = await axiosInstance.get(url);
+
+      setTasks(response.data.tasks || []);
+      setFilteredTasks(response.data.tasks || []);
+      setStatusSummary(response.data.statusSummary || statusSummary);
+    } catch (error) {
+      console.error('Error fetching tasks:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (user) {
+      fetchTasks();
+    }
+  }, [user]);
+
+  const handleFilterChange = (status) => {
+    setStatusFilter(status);
+    fetchTasks(status);
+>>>>>>> 0c51e77eaa8e2a04f0ee88da6f3983da03d1990f
+  };
+
+  const handleViewTask = (taskId) => {
+    navigate(`/user/tasks/${taskId}`);
+  };
+
+  return (
+    <DashboardLayout activeMenu="Manage Tasks">
+<<<<<<< HEAD
+      <div className="p-4 md:p-6">
+        {/* Header */}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 ">
+          <div>
+            <h2 className="text-2xl font-semibold">My Tasks</h2>
+            <p className="text-sm text-gray-500 mt-1">View and manage your assigned tasks</p>
+          </div>
+          {/* Status Summary Cards */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 w-full md:w-auto">
+            <InfoCard icon={<IoStatsChart />} label="Total Tasks" value={addThousandsSeparator(statusSummary.all)} color="bg-blue-500" />
+            <InfoCard icon={<IoListCircle />} label="Pending" value={addThousandsSeparator(statusSummary.pendingTasks)} color="bg-yellow-500" />
+            <InfoCard icon={<IoHourglass />} label="In Progress" value={addThousandsSeparator(statusSummary.inProgressTasks)} color="bg-cyan-500" />
+            <InfoCard icon={<IoCheckmarkCircle />} label="Completed" value={addThousandsSeparator(statusSummary.completedTasks)} color="bg-green-500" />
+          </div>
+        </div>
+
+        {/* Filter Section */}
+        <div className="flex flex-col md:flex-row justify-between items-center mb-4 gap-2  p-2">
+          <div className="flex items-center gap-3">
+            <IoFilter className="text-gray-500 text-xl" />
+            <span className="text-sm font-medium text-gray-700">Filter by Status:</span>
+            <select
+              value={statusFilter}
+              onChange={(e) => handleFilterChange(e.target.value)}
+              className="input-field max-w-xs"
+            >
+              <option value="">All Tasks</option>
+              {STATUS_DATA.map((status) => (
+                <option key={status.value} value={status.value}>
+                  {status.label}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className='flex flex-row justify-center '>
+            {totalPages > 1 && <PaginationButtons />}
+          </div>
+=======
+      <div className="card my-5">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+          <div>
+            <h2 className="text-2xl font-semibold">My Tasks</h2>
+            <p className="text-sm text-gray-500 mt-1">
+              View and manage your assigned tasks
+            </p>
+          </div>
+        </div>
+
+        {/* Status Summary Cards */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
+          <InfoCard
+            icon={<IoStatsChart />}
+            label="Total Tasks"
+            value={addThousandsSeparator(statusSummary.all)}
+            color="bg-blue-500"
+          />
+          <InfoCard
+            icon={<IoListCircle />}
+            label="Pending"
+            value={addThousandsSeparator(statusSummary.pendingTasks)}
+            color="bg-yellow-500"
+          />
+          <InfoCard
+            icon={<IoHourglass />}
+            label="In Progress"
+            value={addThousandsSeparator(statusSummary.inProgressTasks)}
+            color="bg-cyan-500"
+          />
+          <InfoCard
+            icon={<IoCheckmarkCircle />}
+            label="Completed"
+            value={addThousandsSeparator(statusSummary.completedTasks)}
+            color="bg-green-500"
+          />
+        </div>
+
+        {/* Filter Section */}
+        <div className="flex items-center gap-3 mb-4">
+          <IoFilter className="text-gray-500 text-xl" />
+          <span className="text-sm font-medium text-gray-700">Filter by Status:</span>
+          <select
+            value={statusFilter}
+            onChange={(e) => handleFilterChange(e.target.value)}
+            className="input-field max-w-xs"
+          >
+            <option value="">All Tasks</option>
+            {STATUS_DATA.map((status) => (
+              <option key={status.value} value={status.value}>
+                {status.label}
+              </option>
+            ))}
+          </select>
+>>>>>>> 0c51e77eaa8e2a04f0ee88da6f3983da03d1990f
+        </div>
+
+        {/* Tasks Grid */}
+        {loading ? (
+          <div className="flex justify-center items-center h-64">
+            <div className="text-center">
+              <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+              <p className="text-gray-500 mt-2">Loading tasks...</p>
+            </div>
+          </div>
+<<<<<<< HEAD
+        ) : paginatedTasks.length === 0 ? (
+=======
+        ) : filteredTasks.length === 0 ? (
+>>>>>>> 0c51e77eaa8e2a04f0ee88da6f3983da03d1990f
+          <div className="text-center py-12">
+            <div className="text-6xl text-gray-300 mb-4">📋</div>
+            <p className="text-gray-500 text-lg">No tasks found</p>
+            <p className="text-gray-400 text-sm mt-2">
+              {statusFilter ? 'Try changing the filter' : 'You have no tasks assigned yet'}
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+<<<<<<< HEAD
+            {paginatedTasks.map((task) => (
+              <TaskCard key={task._id} task={task} onClick={() => handleViewTask(task._id)} />
+=======
+            {filteredTasks.map((task) => (
+              <TaskCard
+                key={task._id}
+                task={task}
+                onClick={() => handleViewTask(task._id)}
+              />
+>>>>>>> 0c51e77eaa8e2a04f0ee88da6f3983da03d1990f
+            ))}
+          </div>
+        )}
+      </div>
+    </DashboardLayout>
+  );
+};
+
+<<<<<<< HEAD
+export default MyTasks;
+=======
+export default MyTasks;
+>>>>>>> 0c51e77eaa8e2a04f0ee88da6f3983da03d1990f

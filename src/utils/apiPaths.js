@@ -1,0 +1,127 @@
+<<<<<<< HEAD
+
+=======
+>>>>>>> 0c51e77eaa8e2a04f0ee88da6f3983da03d1990f
+export const BASE_URL = "http://localhost:5000";
+
+export const API_PATHS = {
+    AUTH: {
+        REGISTER: "/api/auth/register",
+        LOGIN: "/api/auth/login",
+        GET_PROFILE: "/api/auth/profile",
+    },
+    USERS: {
+        GET_ALL_USERS: "/api/users",
+        GET_USER_BY_ID: (userId) => `/api/users/${userId}`,
+<<<<<<< HEAD
+        GET_USER_STATS: (userId) => `/api/users/${userId}/stats`,
+=======
+>>>>>>> 0c51e77eaa8e2a04f0ee88da6f3983da03d1990f
+        CREATE_USER: "/api/users",
+        UPDATE_USER: (userId) => `/api/users/${userId}`,
+        DELETE_USER: (userId) => `/api/users/${userId}`,
+    },
+    TASKS: {
+        GET_DASHBOARD_DATA: "/api/tasks/dashboard-data",
+        GET_USER_DASHBOARD_DATA: "/api/tasks/user-dashboard-data",
+        GET_ALL_TASKS: "/api/tasks",
+        GET_TASK_BY_ID: (taskId) => `/api/tasks/${taskId}`,
+        CREATE_TASK: "/api/tasks",
+        UPDATE_TASK: (taskId) => `/api/tasks/${taskId}`,
+        DELETE_TASK: (taskId) => `/api/tasks/${taskId}`,
+<<<<<<< HEAD
+        UPDATE_TASK_STATUS: (taskId) => `/api/tasks/${taskId}/status`,
+        UPDATE_TODO_CHECKLIST: (taskId) => `/api/tasks/${taskId}/todo`,
+        ADD_COMMENT: (taskId) => `/api/tasks/${taskId}/comments`,
+        GET_COMMENTS: (taskId) => `/api/tasks/${taskId}/comments`,
+        START_TIMER: (taskId) => `/api/tasks/${taskId}/time/start`,
+        STOP_TIMER: (taskId) => `/api/tasks/${taskId}/time/stop`,
+        ADD_TIME_ENTRY: (taskId) => `/api/tasks/${taskId}/time/manual`
+    },
+    ISSUES: {
+        GET_ISSUES_BY_PROJECT: (projectId) => `/api/projects/${projectId}/issues`,
+        UPDATE_ISSUE_STATUS: (issueId) => `/api/issues/${issueId}/status`,
+        AI_CREATE: "/api/issues/ai-create",
+        GET_ISSUE_BY_ID: (issueId) => `/api/issues/${issueId}`,
+        DELETE_ISSUE: (issueId) => `/api/issues/${issueId}`,
+        GENERATE_SUBTASKS: (issueId) => `/api/issues/${issueId}/generate-subtasks`,
+        CREATE_ISSUE: "/api/issues",
+    },
+    ANALYTICS: {
+        GET_INSIGHTS: "/api/analytics/insights",
+        GET_TEAM_ANALYTICS: "/api/analytics/team",
+        GET_SUGGESTED_PRIORITIES: "/api/analytics/suggested-priorities"
+    },
+    ACTIVITIES: {
+        GET_FEED: "/api/activities/feed",
+        GET_TEAM_FEED: "/api/activities/team-feed",
+        GET_UNREAD_COUNT: "/api/activities/unread-count",
+        MARK_READ: "/api/activities/mark-read",
+        MARK_ALL_READ: "/api/activities/mark-all-read"
+    },
+    BULK_OPERATIONS: {
+        UPDATE_STATUS: "/api/bulk-operations/status",
+        UPDATE_PRIORITY: "/api/bulk-operations/priority",
+        ASSIGN_TASKS: "/api/bulk-operations/assign",
+        DELETE_TASKS: "/api/bulk-operations/delete",
+        UPDATE_DUE_DATE: "/api/bulk-operations/due-date"
+    },
+    SEARCH: {
+        SEARCH_TASKS: "/api/search/tasks",
+        FILTER_OPTIONS: "/api/search/filter-options",
+        SEARCH_USERS: "/api/search/users",
+        QUICK_FILTERS: "/api/search/quick-filters"
+    },
+    REPORTS: {
+        EXPORT_TASKS: "/api/reports/export/tasks",
+        EXPORT_USERS: "/api/reports/export/users",
+        GET_BURNDOWN_CHART_DATA: (projectId, startDate, endDate) => `/api/reports/burndown/${projectId}/${startDate}/${endDate}`,
+    },
+    IMAGE: {
+        UPLOAD_IMAGE: "/api/auth/upload-image"
+    },
+    SETTINGS: {
+        UPDATE_PROFILE: "/api/settings/profile",
+        GET_PREFERENCES: "/api/settings/preferences",
+        UPDATE_PREFERENCES: "/api/settings/preferences",
+        DELETE_ACCOUNT: "/api/settings/account",
+        EXPORT_DATA: "/api/settings/export-data"
+    },
+    AI: {
+        SUGGEST_BREAKDOWN: "/api/ai/suggest-breakdown",
+        SUGGEST_ASSIGNEE: "/api/ai/suggest-assignee",
+        SMART_SCHEDULE: "/api/ai/smart-schedule",
+        GENERATE_DESCRIPTION: "/api/ai/generate-description",
+        PREDICT_COMPLETION: "/api/ai/predict-completion"
+    },
+    COMMENTS: {
+        ADD_COMMENT: (taskId) => `/api/tasks/${taskId}/comments`,
+        GET_COMMENTS: (taskId) => `/api/tasks/${taskId}/comments`,
+        GET_THREAD: (commentId) => `/api/comments/${commentId}`,
+        UPDATE_COMMENT: (commentId) => `/api/comments/${commentId}`,
+        DELETE_COMMENT: (commentId) => `/api/comments/${commentId}`,
+        ADD_REACTION: (commentId) => `/api/comments/${commentId}/react`,
+        REPLY_COMMENT: (commentId) => `/api/comments/${commentId}/reply`
+    },
+    PROJECTS: {
+        GET_ALL_PROJECTS: "/api/projects",
+        GET_PROJECT_BY_ID: (projectId) => `/api/projects/${projectId}`,
+        CREATE_PROJECT: "/api/projects",
+        UPDATE_PROJECT: (projectId) => `/api/projects/${projectId}`,
+        DELETE_PROJECT: (projectId) => `/api/projects/${projectId}`,
+        GENERATE_WORKFLOW: "/api/projects/generate-workflow",
+=======
+
+        UPDATE_TASK_STATUS: (taskId) => `/api/tasks/${taskId}/status`,
+        UPDATE_TODO_CHECKLIST: (taskId) => `/api/tasks/${taskId}/todo`
+
+    },
+    REPORTS: {
+        EXPORT_TASKS: "/api/reports/export/tasks",
+        EXPORT_USERS: "/api/reports/export/users"
+    },
+    IMAGE: {
+        UPLOAD_IMAGE: "/api/auth/upload-image"
+>>>>>>> 0c51e77eaa8e2a04f0ee88da6f3983da03d1990f
+    }
+}

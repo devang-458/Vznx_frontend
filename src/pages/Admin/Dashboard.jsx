@@ -1,0 +1,574 @@
+<<<<<<< HEAD
+import React, { useContext, useEffect, useMemo, useState } from 'react';
+import DashboardLayout from '../../components/layouts/DashboardLayout';
+import { useUserAuth } from '../../hooks/useUserAuth';
+import { UserContext } from '../../context/userContext';
+import axiosInstance from '../../utils/axiosinstance';
+import { API_PATHS } from '../../utils/apiPaths';
+import moment from 'moment';
+import InfoCard from '../../components/Cards/InfoCard';
+import { addThousandsSeparator } from '../../utils/helper';
+
+=======
+import React, { useContext, useEffect, useState } from 'react'
+import DashboardLayout from '../../components/layouts/DashboardLayout'
+import { useUserAuth } from '../../hooks/useUserAuth'
+import { UserContext } from '../../context/userContext';
+import axiosInstance from '../../utils/axiosinstance';
+import { API_PATHS } from '../../utils/apiPaths';
+import moment from "moment"
+import { IoMdCard } from "react-icons/io";
+import InfoCard from '../../components/Cards/InfoCard';
+import { addThousandsSeparator } from '../../utils/helper';
+>>>>>>> 0c51e77eaa8e2a04f0ee88da6f3983da03d1990f
+import {
+  IoStatsChart,
+  IoListCircle,
+  IoHourglass,
+  IoCheckmarkCircle
+} from "react-icons/io5";
+<<<<<<< HEAD
+import { LuSquareArrowRight, LuCirclePlus, LuMessageCircle, LuUsers, LuBell } from 'react-icons/lu';
+import { FiZap } from 'react-icons/fi';
+
+=======
+import { LuAArrowDown, LuSquareArrowRight } from 'react-icons/lu';
+>>>>>>> 0c51e77eaa8e2a04f0ee88da6f3983da03d1990f
+import { useNavigate } from 'react-router-dom';
+import TaskListTable from '../../components/TaskListTable';
+import CustomPieChart from '../../components/Charts/CustomPieChart';
+import CustomBarChart from '../../components/Charts/CustomBarChart';
+<<<<<<< HEAD
+import { motion, AnimatePresence } from 'framer-motion';
+import Button from '../../components/layouts/Button';
+import useFetchData from '../../hooks/useFetchData';
+
+const COLORS = ["#3B82F6", "#F59E0B", "#06B6D4", "#10B981"];
+
+// Predict overdue tasks (3-day window)
+const predictPotentiallyOverdue = (tasks = []) => {
+  const now = moment();
+  return tasks.filter(t => {
+    if (!t?.dueDate) return false;
+    if (t.status === 'Completed') return false;
+    const diff = moment(t.dueDate).diff(now, 'days');
+    return diff >= 0 && diff <= 3;
+  });
+};
+
+=======
+
+const COLORS = ["#3B82F6", "#F59E0B", "#06B6D4", "#10B981"];
+>>>>>>> 0c51e77eaa8e2a04f0ee88da6f3983da03d1990f
+const Dashboard = () => {
+  useUserAuth();
+  const navigate = useNavigate();
+  const { user } = useContext(UserContext);
+
+<<<<<<< HEAD
+  const { data: dashboardData, loading, error, fetchData: refetchDashboardData } = useFetchData(
+    user ? API_PATHS.TASKS.GET_DASHBOARD_DATA : null,
+    { skip: !user }
+  );
+
+  const { data: insightsData, loading: insightsLoading, error: insightsError } = useFetchData(
+    user ? API_PATHS.ANALYTICS.GET_INSIGHTS : null,
+    { skip: !user, initialData: [] }
+  );
+
+  const { data: projectsData, loading: projectsLoading, error: projectsError } = useFetchData(
+    user ? API_PATHS.PROJECTS.GET_ALL_PROJECTS : null,
+    { skip: !user, initialData: [] }
+  );
+
+  // const [dashboardData, setDashboardData] = useState(null); // Removed
+  const [pieChartData, setPieChartData] = useState([]);
+  const [barChartData, setBarChartData] = useState([]);
+  const [filter, setFilter] = useState({ status: 'all', mineOnly: false });
+  const [modalTask, setModalTask] = useState(null);
+  const [fabOpen, setFabOpen] = useState(false);
+  // const [loading, setLoading] = useState(false); // Removed
+  // const [error, setError] = useState(null); // Removed
+
+  // Load dashboard data
+  // const getDashboardData = async () => { // Removed
+  //   if (!user) return;
+
+  //   setLoading(true);
+  //   setError(null);
+
+  //   try {
+  //     const res = await axiosInstance.get(API_PATHS.TASKS.GET_DASHBOARD_DATA);
+
+  //     const normalized = {
+  //       charts: res.data?.charts || {
+  //         taskDistribution: res.data?.taskDistribution || {},
+  //         taskPriorityLevels: res.data?.taskPriorityLevels || {}
+  //       },
+  //       recentTasks: res.data?.recentTasks || []
+  //     };
+
+  //     setDashboardData(normalized);
+
+  //     setPieChartData([
+  //       { name: "Pending", value: normalized.charts.taskDistribution?.Pending || 0 },
+  //       { name: "In Progress", value: normalized.charts.taskDistribution["In Progress"] || normalized.charts.taskDistribution?.InProgress || 0 },
+  //       { name: "Completed", value: normalized.charts.taskDistribution?.Completed || 0 }
+  //     ]);
+
+  //     setBarChartData([
+  //       { name: "Low", value: normalized.charts.taskPriorityLevels?.Low || 0 },
+  //       { name: "Medium", value: normalized.charts.taskPriorityLevels?.Medium || 0 },
+  //       { name: "High", value: normalized.charts.taskPriorityLevels?.High || 0 }
+  //     ]);
+
+  //   } catch (err) {
+  //     console.error(err);
+  //     setError("Failed to load dashboard data.");
+  //   }
+
+  //   setLoading(false);
+  // };
+
+  useEffect(() => {
+    // if (user) getDashboardData(); // Replaced by hook's internal fetch
+    if (dashboardData) {
+      const normalized = {
+        charts: dashboardData?.charts || {
+          taskDistribution: dashboardData?.taskDistribution || {},
+          taskPriorityLevels: dashboardData?.taskPriorityLevels || {}
+        },
+        recentTasks: dashboardData?.recentTasks || []
+      };
+
+      setPieChartData([
+        { name: "Pending", value: normalized.charts.taskDistribution?.Pending || 0 },
+        { name: "In Progress", value: normalized.charts.taskDistribution["In Progress"] || normalized.charts.taskDistribution?.InProgress || 0 },
+        { name: "Completed", value: normalized.charts.taskDistribution?.Completed || 0 }
+      ]);
+
+      setBarChartData([
+        { name: "Low", value: normalized.charts.taskPriorityLevels?.Low || 0 },
+        { name: "Medium", value: normalized.charts.taskPriorityLevels?.Medium || 0 },
+        { name: "High", value: normalized.charts.taskPriorityLevels?.High || 0 }
+      ]);
+    }
+  }, [dashboardData]); // Dependency changed to dashboardData
+
+  // New Task button logic
+  const createTask = () => {
+    if (user?.role === "admin") {
+      navigate("/admin/create-task");
+    } else {
+      navigate("/user/create-task");
+    }
+  };
+
+  const sendMassage = () => {
+    navigate("/admin/messages")
+  }
+
+  const totals = dashboardData?.charts?.taskDistribution || {};
+  const totalAll = (totals.Pending || 0) + (totals["In Progress"] || totals.InProgress || 0) + (totals.Completed || 0);
+  const completionRate = totalAll ? Math.round((totals.Completed / totalAll) * 100) : 0;
+
+  const potentialOverdue = useMemo(() => predictPotentiallyOverdue(dashboardData?.recentTasks || []), [dashboardData]);
+
+  // Filtered task list
+  const filteredTasks = useMemo(() => {
+    if (!dashboardData?.recentTasks) return [];
+
+    let list = [...dashboardData.recentTasks];
+
+    if (filter.status !== "all") {
+      list = list.filter(t => t.status === filter.status);
+    }
+
+    if (filter.mineOnly && user) {
+      list = list.filter(t => t?.assignedTo?._id === user?._id);
+    }
+
+    return list;
+  }, [dashboardData, filter, user]);
+
+  // Modal component
+  const TaskModal = ({ task, onClose }) => {
+    if (!task) return null;
+
+    return (
+      <AnimatePresence>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-50 grid place-items-center bg-black bg-opacity-40"
+          onClick={onClose}
+        >
+          <motion.div
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 20, opacity: 0 }}
+            className="w-full max-w-2xl bg-white rounded-2xl shadow-xl p-6"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3 className="text-lg font-semibold">{task.title}</h3>
+            <p className="text-sm text-gray-600 mt-1">{task.description}</p>
+
+            <div className="mt-4 flex gap-3 text-xs">
+              <div className="px-2 py-1 rounded bg-gray-200">Status: {task.status}</div>
+              <div className="px-2 py-1 rounded bg-gray-200">Priority: {task.priority}</div>
+              <div className="px-2 py-1 rounded bg-gray-200">Due: {moment(task.dueDate).format("MMM D")}</div>
+            </div>
+
+            <Button
+              variant="primary"
+              className="mt-5"
+              onClick={() => navigate(`/tasks/${task._id}`)}
+            >
+              Open Task
+            </Button>
+          </motion.div>
+        </motion.div>
+      </AnimatePresence>
+    );
+  };
+
+  return (
+    <DashboardLayout activeMenu="Dashboard">
+      <div className="min-h-screen bg-gray-50 p-6 md:p-10">
+
+        {/* HEADER */}
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+          <div>
+            <h1 className="text-2xl font-semibold">
+              Welcome back{user?.name ? `, ${user.name.split(' ')[0]}` : ''} 👋
+            </h1>
+            <p className="text-sm text-gray-600">
+              {moment().format("dddd, Do MMM YYYY")}
+            </p>
+
+
+          </div>
+
+          {/* Filter + New Task */}
+          <div className="flex items-center gap-3">
+
+            <div className="flex items-center gap-2  bg-white border rounded-full px-3 py-1 shadow-sm">
+              <select className="text-sm outline-none" value={filter.status} onChange={(e) => setFilter(f => ({ ...f, status: e.target.value }))}>
+                <option value="all">All statuses</option>
+                <option value="Pending">Pending</option>
+                <option value="InProgress">In Progress</option>
+                <option value="Completed">Completed</option>
+              </select>
+            </div>
+            <div className="flex items-center gap-2 shrink-0">
+              {potentialOverdue.length > 0 && (
+                <div className="mt-3 flex items-center gap-3 bg-red-50 border border-red-200 text-red-700 px-4 py-2 rounded text-center mx-auto">
+                  <FiZap />
+                  {potentialOverdue.length} task(s) might miss deadline
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* STATS CARDS */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-5 mt-8">
+          <InfoCard icon={<IoStatsChart />} label="Total" value={totalAll} color="bg-blue-500" />
+          <InfoCard icon={<IoListCircle />} label="Pending" value={totals.Pending || 0} color="bg-yellow-400" />
+          <InfoCard icon={<IoHourglass />} label="In Progress" value={totals["In Progress"] || totals.InProgress || 0} color="bg-cyan-400" />
+          <InfoCard icon={<IoCheckmarkCircle />} label="Completed" value={totals.Completed || 0} color="bg-green-400" />
+        </div>
+
+        {/* PREDICTIVE INSIGHTS */}
+        <div className="mt-8">
+          {insightsLoading ? (
+            <div className="flex justify-center items-center h-24 bg-white rounded-lg shadow-md">
+              <p className="text-gray-500">Loading insights...</p>
+            </div>
+          ) : insightsError ? (
+            <div className="flex justify-center items-center h-24 bg-white rounded-lg shadow-md">
+              <p className="text-red-500">Error loading insights: {insightsError.message}</p>
+            </div>
+          ) : insightsData.length === 0 ? (
+            <div className="text-center py-6 bg-white rounded-lg shadow-md">
+              <p className="text-gray-500">No predictive insights available yet.</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {Array.isArray(insightsData) && insightsData.map((insight) => (
+                <div key={insight._id} className="bg-white rounded-lg shadow-md p-4 border-l-4 border-blue-500">
+                  <p className="text-sm font-medium text-gray-600 mb-1">{insight.type} for {insight.projectId?.name}</p>
+                  <p className="text-gray-800">{insight.insightText}</p>
+                  <p className="text-xs text-gray-500 mt-2">Severity: {insight.severity} | Generated: {new Date(insight.generatedAt).toLocaleDateString()}</p>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* RECENT PROJECTS */}
+        <div className="mt-8">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-semibold text-gray-900">Recent Projects</h2>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="text-blue-600"
+              onClick={() => navigate('/admin/projects')}
+            >
+              See All Projects
+            </Button>
+          </div>
+          {projectsLoading ? (
+            <div className="flex justify-center items-center h-24 bg-white rounded-lg shadow-md">
+              <p className="text-gray-500">Loading projects...</p>
+            </div>
+          ) : projectsError ? (
+            <div className="flex justify-center items-center h-24 bg-white rounded-lg shadow-md">
+              <p className="text-red-500">Error loading projects: {projectsError.message}</p>
+            </div>
+          ) : projectsData.length === 0 ? (
+            <div className="text-center py-6 bg-white rounded-lg shadow-md">
+              <p className="text-gray-500">No projects found.</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+
+              {projectsData.slice(0, 3).map((project) => (
+                <div key={project._id} className="bg-white rounded-lg shadow-md p-4">
+                  <h3 className="text-lg font-semibold text-gray-800 mb-1">{project.name}</h3>
+                  <p className="text-sm text-gray-600">{project.description || 'No description.'}</p>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    className="mt-3"
+                    onClick={() => navigate(`/admin/projects/${project._id}/kanban`)}
+                  >
+                    View Kanban
+                  </Button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* CHARTS */}
+        <h2 className="text-xl font-semibold text-gray-900 mt-6">Predictive Insights</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-2">
+
+          <div className="bg-white rounded-2xl p-6 shadow-md">
+            <h5 className="font-medium">Task Distribution</h5>
+            <CustomPieChart data={pieChartData} colors={COLORS} />
+          </div>
+
+          <div className="bg-white rounded-2xl p-6 shadow-md">
+            <h5 className="font-medium">Priority Levels</h5>
+            <CustomBarChart data={barChartData} />
+          </div>
+
+          {/* RECENT TASKS */}
+          <div className="md:col-span-2 bg-white rounded-2xl p-6 shadow-md">
+            <div className="flex items-center justify-between mb-4">
+              <h5 className="font-medium">Recent Tasks</h5>
+              <Button variant="ghost" size="sm" className="text-blue-600" onClick={refetchDashboardData}>
+                Refresh
+              </Button>
+            </div>
+
+            <TaskListTable tableData={filteredTasks} onRowClick={task => setModalTask(task)} />
+          </div>
+        </div>
+
+        {/* FLOATING CREATE BUTTON */}
+        <div className="fixed right-6 bottom-6 z-50">
+          <button
+            onClick={() => setFabOpen(prev => !prev)}
+            className="w-14 h-14 rounded-full bg-blue-600 text-white shadow-lg grid place-items-center"
+          >
+            <LuCirclePlus size={22} />
+          </button>
+
+          {fabOpen && (
+            <div className="absolute bottom-20 right-0 bg-white shadow-xl rounded-xl p-3 w-48">
+              <Button
+                variant="ghost"
+                className="flex items-center gap-2 py-2"
+                onClick={createTask}
+              >
+                <LuCirclePlus /> Create Task
+              </Button>
+            </div>
+          )}
+        </div>
+
+        <TaskModal task={modalTask} onClose={() => setModalTask(null)} />
+
+        {error && <p className="text-red-600 mt-4">{error}</p>}
+      </div>
+    </DashboardLayout >
+  );
+};
+
+export default Dashboard;
+=======
+  const [dashboardData, setDashboardData] = useState(null);
+  const [pieChartData, setPieChartData] = useState([]);
+  const [barChartData, setBarChartData] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  const prepareChartData = (data) => {
+    const taskDistribution = data?.taskDistribution || {};
+    const taskPriorityLevels = data?.taskPrioritiesLevels || {}; // ✅ Fixed typo
+
+    const taskDistributionData = [
+      { status: "Pending", count: taskDistribution?.Pending || 0 },
+      { status: "In Progress", count: taskDistribution?.InProgress || 0 },
+      { status: "Completed", count: taskDistribution?.Completed || 0 },
+    ];
+
+    const priorityLevelData = [
+      { priority: "Low", count: taskPriorityLevels?.Low || 0 },
+      { priority: "Medium", count: taskPriorityLevels?.Medium || 0 },
+      { priority: "High", count: taskPriorityLevels?.High || 0 },
+    ];
+
+    setPieChartData(taskDistributionData);
+    setBarChartData(priorityLevelData);
+  };
+
+  const getDashboardData = async () => {
+    if (!user) return; 
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      const response = await axiosInstance.get(API_PATHS.TASKS.GET_DASHBOARD_DATA);
+
+      if (response.data?.charts) {
+        setDashboardData(response.data);
+        prepareChartData(response.data?.charts);
+      }
+    } catch (error) {
+      console.error("Error fetching dashboard data:", error);
+      setError("Failed to load dashboard data");
+
+      // Set default empty data
+      setDashboardData({
+        charts: { taskDistribution: {}, taskPrioritiesLevels: {} },
+        recentTasks: []
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const onSeeMore = () => {
+
+  }
+
+  useEffect(() => {
+    console.log(localStorage.getItem('token'))
+    if (user) {
+      getDashboardData();
+    }
+  }, [user]); 
+
+  if (loading && !dashboardData) {
+    return <DashboardLayout activeMenu="Dashboard">
+      <div className="flex items-center justify-center h-64">
+        <p>Loading dashboard...</p>
+      </div>
+    </DashboardLayout>;
+  }
+
+  return (<DashboardLayout activeMenu="Dashboard">
+    <div className='card my-5'>
+      <div>
+        <div className='col-span-3'>
+          <h2 className='text-xl md:text-2xl'>
+            Good Morning
+          </h2>
+          <p className='text-xs md:text-xs text-gray-400 mt-1.5'>
+            {moment().format("dddd  Do  MMM  YYYY")}
+          </p>
+        </div>
+      </div>
+
+
+      <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 md:gap-6 mt-5'>
+        <InfoCard
+          icon={<IoStatsChart />}
+          label="Total Tasks"
+          value={addThousandsSeparator(dashboardData?.charts?.taskDistribution?.All || 0)}
+          color="bg-blue-500"
+        />
+
+        <InfoCard
+          icon={<IoListCircle />}
+          label="Pending"
+          value={addThousandsSeparator(dashboardData?.charts?.taskDistribution?.Pending || 0)}
+          color="bg-yellow-500"
+        />
+
+        <InfoCard
+          icon={<IoHourglass />}
+          label="In Progress"
+          value={addThousandsSeparator(dashboardData?.charts?.taskDistribution?.InProgress || 0)}
+          color="bg-cyan-500"
+        />
+
+        <InfoCard
+          icon={<IoCheckmarkCircle />}
+          label="Completed"
+          value={addThousandsSeparator(dashboardData?.charts?.taskDistribution?.Completed || 0)}
+          color="bg-green-500"
+        />
+      </div>
+
+      <div className='grid grid-cols-1 md:grid-cols-2 gap-6 my-4 md:my-6'>
+
+        <div>
+          <div className='card'>
+            <div className='flex items-center justify-between'>
+              <h5 className='font-medium'>Task Distribution</h5>
+            </div>
+            <CustomPieChart data={pieChartData}
+              label="Total Balance"
+              colors={COLORS}
+            />
+          </div>
+        </div>
+
+        <div>
+          <div className='card'>
+            <div className='flex items-center justify-between'>
+              <h5 className='font-medium'>Task Priority Levels</h5>
+            </div>
+            <CustomBarChart data={barChartData}
+            />
+          </div>
+        </div>
+
+        <div className='md:col-span-2'>
+          <div className='card'>
+            <div className='flex items-center justify-between'>
+              <h5>Recent Tasks</h5>
+            </div>
+            <button className='card-btn' onClick={onSeeMore}>
+              Sell All <LuSquareArrowRight className='text-base' />
+            </button>
+          </div>
+
+          <TaskListTable tableData={dashboardData?.recentTasks || []} />
+        </div>
+      </div>
+
+    </div>
+  </DashboardLayout>)
+}
+
+export default Dashboard
+>>>>>>> 0c51e77eaa8e2a04f0ee88da6f3983da03d1990f
